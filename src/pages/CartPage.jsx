@@ -130,12 +130,12 @@ export default function CartPage() {
         </p>
       )}
 
-      <div className="two-col">
-        <div className="card card-pad">
+      <div className="two-col cart-layout">
+        <div className="card card-pad cart-items-card">
           {cartItems.map((c) => {
             const it = menuItemsById[c.menuItemId]
             return (
-              <div className="menu-row" key={c.cartItemId}>
+              <div className="menu-row cart-item-row" key={c.cartItemId}>
                 <div className="menu-info">
                   <div className="menu-name">
                     {it ? (
@@ -148,22 +148,22 @@ export default function CartPage() {
                     )}
                   </div>
                   {it && <p className="menu-desc">{it.description}</p>}
-                  <div style={{ fontSize: 13, color: 'var(--muted)' }}>{inr(c.itemPrice)} each</div>
+                  <div className="cart-item-each-price">{inr(c.itemPrice)} each</div>
                 </div>
-                <div className="menu-action">
+                <div className="menu-action cart-item-actions">
                   <span className="menu-price">{inr(Number(c.itemPrice) * c.quantity)}</span>
-                  <div className="qty">
+                  <div className="qty cart-item-qty">
                     <button onClick={() => setQty(c, c.quantity - 1)}>−</button>
                     <span>{c.quantity}</span>
                     <button onClick={() => setQty(c, c.quantity + 1)}>+</button>
                   </div>
-                  <button className="btn subtle sm" onClick={() => setQty(c, 0)}>Remove</button>
+                  <button className="btn subtle sm cart-item-remove" onClick={() => setQty(c, 0)}>Remove</button>
                 </div>
               </div>
             )
           })}
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 8 }}>
-            <button className="btn subtle sm" onClick={onClear}>Clear cart</button>
+          <div className="cart-clear-row">
+            <button className="btn subtle sm cart-clear-btn" onClick={onClear}>Clear cart</button>
           </div>
         </div>
 

@@ -21,13 +21,24 @@ const OTHER_NAV = [
   { to: 'timings',     label: 'Timings',          icon: '🕒' },
 ]
 
+const SIDEBAR_NAV = [
+  { kind: 'owner-home', label: 'All restaurants', icon: '🏬', end: true },
+  ...MAIN_NAV.map((item) => ({
+    ...item,
+    kind: 'restaurant',
+  })),
+  ...OTHER_NAV.map((item) => ({
+    ...item,
+    kind: 'restaurant',
+  })),
+]
+
 export default function OwnerShell() {
   const { restaurantId } = useParams()
   const navigate = useNavigate()
   const { session, logout } = useAuth()
-  const [collapsed, setCollapsed] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
-  const [isNavExpanded, setIsNavExpanded] = useState(false) // false = collapsed, true = expanded
+  const [isNavExpanded, setIsNavExpanded] = useState(false)
 
   const { data: timingsData } = useQuery(GET_RESTAURANT_TIMINGS, {
     variables: { params: { restaurantId } },
@@ -84,21 +95,47 @@ export default function OwnerShell() {
   const initial = (session?.name || 'O').slice(0, 1).toUpperCase()
 
   return (
-    <div className={'owner-shell' + (collapsed ? ' collapsed' : '')}>
+    <div className="owner-shell">
       <aside className="owner-sidebar">
-        <button className="os-collapse" onClick={() => setCollapsed((c) => !c)} title={collapsed ? 'Expand' : 'Collapse'}>
-          {collapsed ? '›' : '‹'}
-        </button>
-        <div className="os-brand" onClick={() => navigate(`/owner/${restaurantId}`)} style={{ cursor: 'pointer' }}>
+        <div className="os-brand" onClick={() => navigate(`/owner/${restaurantId}`)}>
           <span className="brand-dot">Z</span>
           <span className="os-label">zomato</span>
         </div>
 
+        <div className="os-section">Owner workspace</div>
+        <nav className="os-nav-group" aria-label="Owner sections">
+          {SIDEBAR_NAV.map((item) => {
+            const target = item.kind === 'owner-home'
+              ? '/owner'
+              : item.to
+                ? `/owner/${restaurantId}/${item.to}`
+                : `/owner/${restaurantId}`
+            const badgeCount = item.label === 'Live orders'
+              ? pending
+              : item.label === 'Scheduled orders'
+                ? scheduledPending
+                : 0
+
+            return (
+              <NavLink
+                key={item.label}
+                to={target}
+                end={item.label === 'All restaurants' || item.end}
+                className={({ isActive }) => 'os-link' + (isActive ? ' active' : '')}
+              >
+                <span className="os-icon">{item.icon}</span>
+                <span className="os-label">{item.label}</span>
+                {badgeCount > 0 && <span className="os-link-badge">{badgeCount}</span>}
+              </NavLink>
+            )
+          })}
+        </nav>
+
         <div className="os-foot">
           <div className="os-user">
             <div className="os-avatar">{initial}</div>
-            <div style={{ minWidth: 0, flex: 1 }}>
-              <div className="os-user-name" style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <div>
+              <div className="os-user-name">
                 {session?.name || 'Owner'}
               </div>
               <div className="os-user-role">Owner account</div>
