@@ -83,3 +83,36 @@
       at JSXParserMixin.parseBlockOrModuleBlockBody (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:13316:36)
       at JSXParserMixin.parseBlockBody (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:13309:10)
       at JSXParserMixin.parseProgram (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:12622:10)
+2:17:13 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
+2:20:20 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
+2:20:33 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
+2:20:42 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
+2:20:42 pm [vite] warning: The character "}" is not valid inside a JSX element
+201|            }
+202|            </NavLink>
+203|          ))}
+   |            ^
+204|  
+205|          <div className="os-foot">
+
+  Plugin: vite:esbuild
+  File: /home/hr/FSD/zomato/frontend/src/pages/owner/OwnerShell.jsx
+2:20:55 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
+2:24:10 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
+2:24:20 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
+2:24:46 pm [vite] hmr update /src/styles/index.css
+2:26:39 pm [vite] hmr update /src/styles/index.css
+2:27:21 pm [vite] hmr update /src/styles/index.css
+2:27:34 pm [vite] hmr update /src/styles/index.css
+2:29:10 pm [vite] hmr update /src/styles/index.css
+2:29:55 pm [vite] hmr update /src/styles/index.css
+2:29:58 pm [vite] hmr update /src/styles/index.css
+2:35:19 pm [vite] hmr update /src/styles/index.css
+2:36:33 pm [vite] hmr update /src/styles/index.css
+2:37:41 pm [vite] hmr update /src/styles/index.css
+2:45:05 pm [vite] hmr update /src/styles/index.css
+2:47:21 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
+2:48:10 pm [vite] hmr update /src/styles/index.css
+2:49:19 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
+2:51:10 pm [vite] hmr update /src/styles/index.css
+2:52:24 pm [vite] hmr update /src/styles/index.css

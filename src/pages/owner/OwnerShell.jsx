@@ -10,10 +10,13 @@ import {
 import { useAuth } from '../../context/AuthContext.jsx'
 import { titleCase } from '../../lib/format.js'
 
-const NAV = [
+const MAIN_NAV = [
   { to: '',            label: 'Overview',         icon: '📊', end: true },
   { to: 'live',        label: 'Live orders',      icon: '🔔' },
   { to: 'scheduled',   label: 'Scheduled orders', icon: '📅' },
+]
+
+const OTHER_NAV = [
   { to: 'menu',        label: 'Menu',             icon: '🍽️' },
   { to: 'timings',     label: 'Timings',          icon: '🕒' },
 ]
@@ -24,6 +27,7 @@ export default function OwnerShell() {
   const { session, logout } = useAuth()
   const [collapsed, setCollapsed] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
+  const [isNavExpanded, setIsNavExpanded] = useState(false) // false = collapsed, true = expanded
 
   const { data: timingsData } = useQuery(GET_RESTAURANT_TIMINGS, {
     variables: { params: { restaurantId } },
@@ -90,41 +94,6 @@ export default function OwnerShell() {
           <span className="os-label">zomato</span>
         </div>
 
-        <div className="os-section">Manage</div>
-        {NAV.map((item) => (
-          <NavLink
-            key={item.label}
-            to={item.to ? `/owner/${restaurantId}/${item.to}` : `/owner/${restaurantId}`}
-            end={item.end}
-            className={({ isActive }) => 'os-link' + (isActive ? ' active' : '')}
-          >
-            <span className="os-icon">{item.icon}</span>
-            <span className="os-label">{item.label}</span>
-            {item.label === 'Live orders' && pending > 0 && (
-              <span style={{
-                marginLeft: 'auto',
-                background: 'var(--red)',
-                color: '#fff',
-                fontSize: 10,
-                padding: '1px 7px',
-                borderRadius: 999,
-                fontWeight: 800,
-              }}>{pending}</span>
-            )}
-            {item.label === 'Scheduled orders' && scheduledPending > 0 && (
-              <span style={{
-                marginLeft: 'auto',
-                background: '#1A73E8',
-                color: '#fff',
-                fontSize: 10,
-                padding: '1px 7px',
-                borderRadius: 999,
-                fontWeight: 800,
-              }}>{scheduledPending}</span>
-            )}
-          </NavLink>
-        ))}
-
         <div className="os-foot">
           <div className="os-user">
             <div className="os-avatar">{initial}</div>
@@ -138,6 +107,55 @@ export default function OwnerShell() {
           </div>
         </div>
       </aside>
+
+      {/* Mobile Navigation Bar - Outside sidebar */}
+      <div className="owner-nav-bar">
+        {MAIN_NAV.map((item) => (
+          <NavLink
+            key={item.label}
+            to={item.to ? `/owner/${restaurantId}/${item.to}` : `/owner/${restaurantId}`}
+            end={item.end}
+            className={({ isActive }) => 'owner-nav-item' + (isActive ? ' active' : '')}
+          >
+            <span className="owner-nav-icon">{item.icon}</span>
+            <span className="owner-nav-label">{item.label}</span>
+            {item.label === 'Live orders' && pending > 0 && (
+              <span className="owner-nav-badge">{pending}</span>
+            )}
+            {item.label === 'Scheduled orders' && scheduledPending > 0 && (
+              <span className="owner-nav-badge">{scheduledPending}</span>
+            )}
+          </NavLink>
+        ))}
+        
+        <button 
+          className="owner-nav-more"
+          onClick={() => setIsNavExpanded(!isNavExpanded)}
+        >
+          <span className="owner-nav-more-icon">{isNavExpanded ? '✕' : '⋯'}</span>
+        </button>
+      </div>
+
+      {/* Expanded Navigation */}
+      {isNavExpanded && (
+        <div className="owner-nav-expanded">
+          <NavLink to="/owner" end className="owner-nav-item">
+            <span className="owner-nav-icon">🏬</span>
+            <span className="owner-nav-label">All restaurants</span>
+          </NavLink>
+          {OTHER_NAV.map((item) => (
+            <NavLink
+              key={item.label}
+              to={item.to ? `/owner/${restaurantId}/${item.to}` : `/owner/${restaurantId}`}
+              end={item.end}
+              className={({ isActive }) => 'owner-nav-item' + (isActive ? ' active' : '')}
+            >
+              <span className="owner-nav-icon">{item.icon}</span>
+              <span className="owner-nav-label">{item.label}</span>
+            </NavLink>
+          ))}
+        </div>
+      )}
       
       
       <main className="owner-main">
