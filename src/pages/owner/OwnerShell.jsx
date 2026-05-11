@@ -90,11 +90,6 @@ export default function OwnerShell() {
           <span className="os-label">zomato</span>
         </div>
 
-        <NavLink to="/owner" end className="os-link">
-          <span className="os-icon">🏬</span>
-          <span className="os-label">All restaurants</span>
-        </NavLink>
-
         <div className="os-section">Manage</div>
         {NAV.map((item) => (
           <NavLink
@@ -143,7 +138,8 @@ export default function OwnerShell() {
           </div>
         </div>
       </aside>
-
+      
+      
       <main className="owner-main">
         <header className="owner-header">
           <div>

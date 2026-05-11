@@ -4,6 +4,7 @@ import { useQuery } from '@apollo/client'
 import { useAuth } from '../context/AuthContext.jsx'
 import { GET_CART_ITEMS } from '../graphql/operations.js'
 import GlobalCartBar from './GlobalCartBar.jsx'
+import MobileBottomNav from './MobileBottomNav.jsx'
 
 export default function Layout({ children }) {
   const { session, logout } = useAuth()
@@ -95,7 +96,14 @@ export default function Layout({ children }) {
           </div>
         </div>
       </nav>
-      <main className="container">{children}</main>
+      
+      <div className="mobile-content-wrapper">
+        <main className="container">{children}</main>
+      </div>
+      
+      {/* Mobile bottom navigation - only show for customers on mobile */}
+      {!isOwner && <MobileBottomNav />}
+      
       <GlobalCartBar />
     </div>
   )

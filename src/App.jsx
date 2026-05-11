@@ -7,6 +7,7 @@ import CheckoutPage from './pages/CheckoutPage.jsx'
 import OrdersPage from './pages/OrdersPage.jsx'
 import OrderDetailPage from './pages/OrderDetailPage.jsx'
 import AddressesPage from './pages/AddressesPage.jsx'
+import ProfilePage from './pages/ProfilePage.jsx'
 import OwnerShell from './pages/owner/OwnerShell.jsx'
 import OwnerRestaurantsPage from './pages/owner/OwnerRestaurantsPage.jsx'
 import OverviewPanel from './pages/owner/OverviewPanel.jsx'
@@ -74,6 +75,7 @@ export default function App() {
       <Route path="/orders" element={<CustomerShell><OrdersPage /></CustomerShell>} />
       <Route path="/orders/:id" element={<CustomerShell><OrderDetailPage /></CustomerShell>} />
       <Route path="/addresses" element={<CustomerShell><AddressesPage /></CustomerShell>} />
+      <Route path="/profile" element={<CustomerShell><ProfilePage /></CustomerShell>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
