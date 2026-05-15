@@ -26,6 +26,55 @@ export const BROWSE_RESTAURANTS = gql`
   }
 `
 
+export const GET_USER_RECOMMENDED_RESTAURANTS = gql`
+  query GetUserRecommendedRestaurants($params: GetScoredRestaurantsInputParams!) {
+    getUserRecommendedRestaurants(params: $params) {
+      __typename
+      ... on ScoredRestaurantsType {
+        restaurants {
+          restaurantId
+          name
+          cuisineType
+          address
+          pincode
+          isVegOnly
+          isDeleted
+          averageRating
+          totalReviews
+          score
+          isOpen
+          dayFrequent
+          orderVolume
+        }
+      }
+      ... on InvalidLimit { limit }
+      ... on InvalidOffset { offset }
+    }
+  }
+`
+
+export const GET_SCORED_RESTAURANT_ITEMS = gql`
+  query GetScoredRestaurantItems($params: GetScoredRestaurantItemsInputParams!) {
+    getScoredRestaurantItems(params: $params) {
+      __typename
+      ... on ScoredItemsType {
+        menuItems {
+          menuItemId
+          restaurantId
+          name
+          price
+          isAvailable
+          totalOrdersCount
+          recentlyOrderCount
+          score
+          averageRating
+        }
+      }
+      ... on RestaurantNotFound { restaurantId }
+    }
+  }
+`
+
 export const VIEW_RESTAURANT_MENU = gql`
   query ViewRestaurantMenu($params: ViewRestaurantMenuInputParams!) {
     viewRestaurantManu(params: $params) {
@@ -305,6 +354,42 @@ export const CREATE_REVIEW = gql`
 `
 
 // ---------- Account ----------
+export const CREATE_USER = gql`
+  mutation CreateUser($params: CreateUserInputParams!) {
+    createUser(params: $params) {
+      __typename
+      ... on UserType {
+        userId
+        email
+        name
+        phoneNumber
+        role
+      }
+      ... on EmailAlreadyExists { emails }
+      ... on EmptyUserNameFound { name }
+    }
+  }
+`
+
+export const UPDATE_USER = gql`
+  mutation UpdateUser($params: UpdateUserInputParams!) {
+    updateUser(params: $params) {
+      __typename
+      ... on UserType {
+        userId
+        email
+        name
+        phoneNumber
+        role
+      }
+      ... on UserNotFound { userId }
+      ... on EmptyUserNameFound { name }
+      ... on NothingToUpdateUserProperties { userId }
+      ... on UnauthorizedFound { contextUserId }
+    }
+  }
+`
+
 export const USER_LOGIN = gql`
   mutation UserLogin($params: UserLoginInputParams!) {
     userLogin(params: $params) {
@@ -325,7 +410,7 @@ export const USER_LOGIN = gql`
 
 export const GET_USER_ADDRESSES = gql`
   query GetUserAddress {
-    getUserAddress {
+    getUserAddresses {
       __typename
       ... on UserAddressesType {
         userId

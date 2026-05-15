@@ -5,31 +5,6 @@
       "name": "Ravi Kumar",
       "email": "ravi.kumar@gmail.com",
       "role": "CUSTOMER",
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMDkwMDhjMTEtODgyMy00ZTM1LTljYmUtYmZlM2I1MDBmNDZhIiwicm9sZSI6InVzZXIifQ.LqZFDwsePXDC1LGVvZL6YPnOpSnq2HtLJMZnYeBvwzc",
-      "cartId": null
-    },
-    {
-      "id": "0a2841e5-8844-4e2f-b07a-c8279de90f5b",
-      "name": "Sneha Reddy",
-      "email": "sneha.reddy@gmail.com",
-      "role": "CUSTOMER",
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMGEyODQxZTUtODg0NC00ZTJmLWIwN2EtYzgyNzlkZTkwZjViIiwicm9sZSI6InVzZXIifQ.2F98ac_-yA9A6Yr9EJ8QptV0Edvwfcf-6i0a1ZB0HGA",
-      "cartId": null
-    },
-    {
-      "id": "1b3922f6-9955-4f30-b8cc-d938a7e0f16c",
-      "name": "Arjun Sharma",
-      "email": "arjun.sharma@gmail.com",
-      "role": "OWNER",
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMWIzOTIyZjYtOTk1NS00ZjMwLWI4Y2MtZDkzOGE3ZTBmMTZjIiwicm9sZSI6InVzZXIifQ.pv78iPq_If0sPOBT-5fpE09bqIw0YYORPqo-ptB25Ug",
-      "cartId": null
-    },
-    {
-      "id": "2c4a33f7-aa66-5041-c9dd-ea49b8f1f27d",
-      "name": "Pooja Mehta",
-      "email": "pooja.mehta@gmail.com",
-      "role": "CUSTOMER",
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMmM0YTMzZjctYWE2Ni01MDQxLWM5ZGQtZWE0OWI4ZjFmMjdkIiwicm9sZSI6InVzZXIifQ.01cobZu7vfdcxOd0RYkFVnYk8IhXJ-w0KkizOe9nXi4",
       "cartId": null
     },
     {
@@ -37,7 +12,27 @@
       "name": "Rahul Verma",
       "email": "rahul.verma@gmail.com",
       "role": "OWNER",
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiM2Q1YjQ0ZjgtYmI3Ny02MTUyLWQ5ZWUtZmI1YWM5MjAzMzhlIiwicm9sZSI6InVzZXIifQ.g90mkQWaOKSdLFYEM76kOXr7S3yKBWGOLa0xGoBCRNk",
+      "cartId": null
+    },
+    {
+      "id": "2c4a33f7-aa66-5041-c9dd-ea49b8f1f27d",
+      "name": "Pooja Mehta",
+      "email": "pooja.mehta@gmail.com",
+      "role": "CUSTOMER",
+      "cartId": null
+    },
+    {
+      "id": "1b3922f6-9955-4f30-b8cc-d938a7e0f16c",
+      "name": "Arjun Sharma",
+      "email": "arjun.sharma@gmail.com",
+      "role": "OWNER",
+      "cartId": null
+    },
+    {
+      "id": "0a2841e5-8844-4e2f-b07a-c8279de90f5b",
+      "name": "Sneha Reddy",
+      "email": "sneha.reddy@gmail.com",
+      "role": "CUSTOMER",
       "cartId": null
     },
     {
@@ -45,7 +40,6 @@
       "name": "Kavya Nair",
       "email": "kavya.nair@gmail.com",
       "role": "CUSTOMER",
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYWQ2YWU1YTEtMDAwMS00MDAxLTkwMDEtYWFhYWFhYWFhYWFhIiwicm9sZSI6InVzZXIifQ.eQDyl42dzXtEgl2ANIsuJ13I0QS3wBm1Vk4Q5K8l8NM",
       "cartId": null
     },
     {
@@ -53,7 +47,6 @@
       "name": "Vikram Singh",
       "email": "vikram.singh@gmail.com",
       "role": "CUSTOMER",
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYmU3YmY2YjItMDAwMi00MDAyLTkwMDItYmJiYmJiYmJiYmJiIiwicm9sZSI6InVzZXIifQ.DDX-ARMbBBhCWDRnXoLYDFtMRj_aO8kRMC3ij3C2Wo8",
       "cartId": null
     },
     {
@@ -61,7 +54,6 @@
       "name": "Anita Desai",
       "email": "anita.desai@gmail.com",
       "role": "CUSTOMER",
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiY2Y4Y2Y3YzMtMDAwMy00MDAzLTkwMDMtY2NjY2NjY2NjY2NjIiwicm9sZSI6InVzZXIifQ.h6tHlCBEbslJ-m4rtf-Y1ZEwHjsQbiQGbwbnsyt9glU",
       "cartId": null
     },
     {
@@ -69,7 +61,6 @@
       "name": "Rohit Iyer",
       "email": "rohit.iyer@gmail.com",
       "role": "CUSTOMER",
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZDA5ZGQ4ZDQtMDAwNC00MDA0LTkwMDQtZGRkZGRkZGRkZGRkIiwicm9sZSI6InVzZXIifQ.la0INd34DiC_CseJKKusslWtpi_PWtk7bXG3jub1w6o",
       "cartId": null
     },
     {
@@ -77,7 +68,6 @@
       "name": "Meera Pillai",
       "email": "meera.pillai@gmail.com",
       "role": "CUSTOMER",
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZTFhZWU5ZTUtMDAwNS00MDA1LTkwMDUtZWVlZWVlZWVlZWVlIiwicm9sZSI6InVzZXIifQ.02jlfO_xBw6zMMr4KDxFW_JxDN6w7kLixQ6zlhJAjIQ",
       "cartId": null
     },
     {
@@ -85,7 +75,13 @@
       "name": "Sanjay Kapoor",
       "email": "sanjay.kapoor@gmail.com",
       "role": "OWNER",
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZjJiZmYwZjYtMDAwNi00MDA2LTkwMDYtZmZmZmZmZmZmZmZmIiwicm9sZSI6InVzZXIifQ.l29eIbHxIo5pIHor6FvZZi_Awba6FTMm9TNdAZGC-Rs",
+      "cartId": null
+    },
+    {
+      "id": "3557f5aa-93af-46b8-b60b-eee891862b7f",
+      "name": "Baba Hajvali",
+      "email": "babavali3109@gmail.com",
+      "role": "CUSTOMER",
       "cartId": null
     }
   ]

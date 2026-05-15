@@ -1,7 +1,11 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useQuery } from '@apollo/client'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { BROWSE_RESTAURANTS } from '../graphql/operations.js'
+import {
+  BROWSE_RESTAURANTS,
+  GET_USER_RECOMMENDED_RESTAURANTS,
+  GET_USER_ADDRESSES,
+} from '../graphql/operations.js'
 import { titleCase } from '../lib/format.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import {
@@ -13,6 +17,8 @@ import {
 } from '../lib/restaurantUI.js'
 
 const EMPTY = { cuisineType: '', isVegOnly: false, pincode: '', minRating: '', search: '' }
+const DEFAULT_RECOMMENDATION_PINCODE = '500034'
+const RECOMMENDATION_LIMIT = 8
 
 export default function RestaurantsPage() {
   const navigate = useNavigate()
@@ -20,6 +26,7 @@ export default function RestaurantsPage() {
   const { session } = useAuth()
   const [draft, setDraft] = useState(EMPTY)
   const [applied, setApplied] = useState(EMPTY)
+  const [selectedAddressId, setSelectedAddressId] = useState(null)
 
   // Hydrate ?q= from the global search bar in Layout
   useEffect(() => {
@@ -31,7 +38,41 @@ export default function RestaurantsPage() {
     }
   }, [location.search]) // eslint-disable-line
 
-  const variables = useMemo(() => ({
+  // ── Addresses ─────────────────────────────────────────────
+  const { data: addressesData, loading: addressesLoading } = useQuery(
+    GET_USER_ADDRESSES,
+    { skip: !session?.token }
+  )
+  const addresses = addressesData?.getUserAddresses?.__typename === 'UserAddressesType'
+    ? addressesData.getUserAddresses.addresses
+    : []
+
+  // Pick a sensible default once addresses arrive (default flag first, else first item)
+  useEffect(() => {
+    if (selectedAddressId || addresses.length === 0) return
+    const pick = addresses.find((a) => a.isDefault) || addresses[0]
+    if (pick) setSelectedAddressId(pick.addressId)
+  }, [addresses, selectedAddressId])
+
+  const selectedAddress = useMemo(
+    () => addresses.find((a) => a.addressId === selectedAddressId) || null,
+    [addresses, selectedAddressId]
+  )
+  const selectedPincode = selectedAddress?.pincode || ''
+
+  // ── Filters ───────────────────────────────────────────────
+  // The two pincodes are completely separate, by design:
+  //   • selectedPincode  → ONLY feeds getUserRecommendedRestaurants
+  //   • applied.pincode  → ONLY feeds browseRestaurants (from filter bar)
+  // They never cross over.
+  const hasFilters = Boolean(
+    applied.cuisineType ||
+    applied.isVegOnly ||
+    applied.minRating ||
+    applied.search
+  )
+
+  const browseVariables = useMemo(() => ({
     params: {
       cuisineType: applied.cuisineType || null,
       isVegOnly: applied.isVegOnly || null,
@@ -43,9 +84,46 @@ export default function RestaurantsPage() {
     },
   }), [applied])
 
-  const { data, loading, error } = useQuery(BROWSE_RESTAURANTS, { variables })
-  const result = data?.browseRestaurants
-  const restaurants = result?.__typename === 'BrowseRestaurantsType' ? result.restaurants : []
+  // ── Queries: exactly ONE runs at a time ───────────────────
+  const { data: browseData, loading: browseLoading, error: browseError } = useQuery(
+    BROWSE_RESTAURANTS,
+    {
+      variables: browseVariables,
+      skip: !hasFilters,
+    }
+  )
+
+  const { data: recoData, loading: recoLoading } = useQuery(
+    GET_USER_RECOMMENDED_RESTAURANTS,
+    {
+      variables: {
+        params: {
+          pincode: selectedPincode || DEFAULT_RECOMMENDATION_PINCODE,
+          limit: RECOMMENDATION_LIMIT,
+          offset: 0,
+        },
+      },
+      skip: hasFilters || !selectedPincode,
+    }
+  )
+
+  const browseResult = browseData?.browseRestaurants
+  const restaurants = browseResult?.__typename === 'BrowseRestaurantsType'
+    ? browseResult.restaurants
+    : []
+
+  const recoResult = recoData?.getUserRecommendedRestaurants
+  const recommendedRestaurants = recoResult?.__typename === 'ScoredRestaurantsType'
+    ? recoResult.restaurants
+    : []
+
+  const topScoreThreshold = useMemo(() => {
+    if (recommendedRestaurants.length === 0) return Infinity
+    const scores = recommendedRestaurants
+      .map((r) => Number(r.score || 0))
+      .sort((a, b) => b - a)
+    return scores[Math.min(2, scores.length - 1)]
+  }, [recommendedRestaurants])
 
   const apply = (e) => { e?.preventDefault?.(); setApplied(draft) }
 
@@ -54,6 +132,9 @@ export default function RestaurantsPage() {
     setDraft(next)
     setApplied(next)
   }
+
+  const hasAddresses = addresses.length > 0
+  const showAddressEmptyCTA = !!session?.token && !addressesLoading && !hasAddresses
 
   return (
     <>
@@ -79,7 +160,54 @@ export default function RestaurantsPage() {
         </div>
       </section>
 
-      {/* Inline filter bar: Pure Veg + Pincode + Min Rating + Apply / Reset */}
+      {/* Address pill selector */}
+      {hasAddresses && (
+        <section className="address-strip-section">
+          <div className="address-strip-label">Deliver to</div>
+          <div className="address-strip">
+            {addresses.map((a) => {
+              const active = a.addressId === selectedAddressId
+              return (
+                <button
+                  key={a.addressId}
+                  type="button"
+                  className={'address-pill' + (active ? ' active' : '')}
+                  onClick={() => setSelectedAddressId(a.addressId)}
+                  title={a.fullAddress}
+                >
+                  <span className="address-pill-icon" aria-hidden>📍</span>
+                  <span className="address-pill-text">
+                    <span className="address-pill-label">{a.label}</span>
+                    <span className="address-pill-pin">{a.city ? `${a.city} · ` : ''}{a.pincode}</span>
+                  </span>
+                  {a.isDefault && <span className="address-pill-default">Default</span>}
+                </button>
+              )
+            })}
+          </div>
+        </section>
+      )}
+
+      {showAddressEmptyCTA && (
+        <div className="address-empty-cta">
+          <div className="address-empty-icon" aria-hidden>🏠</div>
+          <div className="address-empty-text">
+            <div className="address-empty-title">Add a delivery address</div>
+            <div className="address-empty-sub">
+              Add a delivery address to see restaurants near you
+            </div>
+          </div>
+          <button
+            type="button"
+            className="btn"
+            onClick={() => navigate('/addresses')}
+          >
+            Add Address
+          </button>
+        </div>
+      )}
+
+      {/* Inline filter bar */}
       <form className="filter-bar" onSubmit={apply}>
         <button
           type="button"
@@ -112,8 +240,8 @@ export default function RestaurantsPage() {
           <option value="4.5">★ 4.5+</option>
         </select>
 
-        <button className="fb-btn primary" type="submit" disabled={loading}>
-          {loading ? 'Searching…' : 'Apply'}
+        <button className="fb-btn primary" type="submit" disabled={browseLoading}>
+          {browseLoading ? 'Searching…' : 'Apply'}
         </button>
         <button
           className="fb-btn"
@@ -124,37 +252,138 @@ export default function RestaurantsPage() {
         </button>
       </form>
 
-      {/* Listing */}
-      <h2 className="section-title">
-        {applied.cuisineType ? `${titleCase(applied.cuisineType)} restaurants` : 'Restaurants near you'}
-        <span style={{ color: 'var(--muted)', fontWeight: 500, fontSize: 14, marginLeft: 8 }}>
-          ({loading ? '…' : restaurants.length})
-        </span>
-      </h2>
+      {/* ── ONE section renders at a time ────────────────────── */}
 
-      {error && <div className="errbox">Failed to load restaurants: {error.message}</div>}
-      {result && result.__typename !== 'BrowseRestaurantsType' && (
-        <div className="errbox">Filter rejected: {result.__typename}</div>
+      {!hasFilters ? (
+        /* Recommended For You — horizontal carousel */
+        <section className="reco-section">
+          <div className="reco-header">
+            <div>
+              <h2 className="reco-title">Recommended for You 🍽️</h2>
+              <p className="reco-subtitle">
+                Based on your order history
+                {selectedAddress?.label && ` · ${selectedAddress.label}`}
+              </p>
+            </div>
+          </div>
+
+          {recoLoading ? (
+            <div className="reco-row">
+              {[0, 1, 2, 3].map((i) => (
+                <div className="reco-card" key={i}>
+                  <div className="reco-banner skeleton" />
+                  <div className="reco-body">
+                    <div className="skeleton" style={{ height: 16, marginBottom: 8 }} />
+                    <div className="skeleton" style={{ height: 12, width: '60%', marginBottom: 10 }} />
+                    <div className="skeleton" style={{ height: 22, width: '40%' }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : recommendedRestaurants.length === 0 ? (
+            <div className="reco-empty">
+              <span className="reco-empty-icon" aria-hidden>🍽️</span>
+              <div>
+                <div className="reco-empty-title">No recommendations yet</div>
+                <div className="reco-empty-sub">
+                  Place your first order to get personalized recommendations!
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="reco-row">
+              {recommendedRestaurants.map((r) => (
+                <RecommendedCard
+                  key={r.restaurantId}
+                  r={r}
+                  isTopPick={Number(r.score || 0) >= topScoreThreshold && Number(r.score || 0) > 0}
+                  onClick={() => navigate(`/restaurants/${r.restaurantId}`)}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      ) : (
+        /* Filtered: Restaurants near you */
+        <>
+          <h2 className="section-title">
+            {applied.cuisineType
+              ? `${titleCase(applied.cuisineType)} restaurants`
+              : 'Restaurants near you'}
+            <span style={{ color: 'var(--muted)', fontWeight: 500, fontSize: 14, marginLeft: 8 }}>
+              ({browseLoading ? '…' : restaurants.length})
+            </span>
+          </h2>
+
+          {browseError && (
+            <div className="errbox">Failed to load restaurants: {browseError.message}</div>
+          )}
+          {browseResult && browseResult.__typename !== 'BrowseRestaurantsType' && (
+            <div className="errbox">Filter rejected: {browseResult.__typename}</div>
+          )}
+
+          {!browseLoading && restaurants.length === 0 && (
+            <div className="empty">
+              <div className="emoji">🍴</div>
+              <div className="empty-title">No restaurants match these filters</div>
+              <div>Try widening your search.</div>
+            </div>
+          )}
+
+          <div className="grid">
+            {restaurants.map((r) => (
+              <RestaurantCard
+                key={r.restaurantId}
+                r={r}
+                onClick={() => navigate(`/restaurants/${r.restaurantId}`)}
+              />
+            ))}
+          </div>
+        </>
       )}
-
-      {!loading && restaurants.length === 0 && (
-        <div className="empty">
-          <div className="emoji">🍴</div>
-          <div className="empty-title">No restaurants match these filters</div>
-          <div>Try widening your search.</div>
-        </div>
-      )}
-
-      <div className="grid">
-        {restaurants.map((r) => (
-          <RestaurantCard
-            key={r.restaurantId}
-            r={r}
-            onClick={() => navigate(`/restaurants/${r.restaurantId}`)}
-          />
-        ))}
-      </div>
     </>
+  )
+}
+
+function RecommendedCard({ r, isTopPick, onClick }) {
+  const cuisineKey = r.cuisineType?.toLowerCase()
+  const averageRating = Number(r.averageRating || 0)
+  const shortAddress = r.address
+    ? r.address.split(',').slice(-2).join(',').trim()
+    : ''
+
+  return (
+    <div className="reco-card" onClick={onClick}>
+      <div className={'reco-banner ' + (r.isVegOnly ? 'veg ' : '') + cuisineKey}>
+        <span className="reco-banner-emoji" aria-hidden>{cuisineEmoji(r.cuisineType)}</span>
+
+        <div className="reco-badge-stack">
+          {isTopPick && <span className="reco-badge top-pick">🔥 Top Pick</span>}
+          {r.isVegOnly && <span className="reco-badge veg">PURE VEG</span>}
+        </div>
+
+        <span className={'reco-status ' + (r.isOpen ? 'open' : 'closed')}>
+          {r.isOpen ? 'Open' : 'Closed'}
+        </span>
+      </div>
+
+      <div className="reco-body">
+        <div className="reco-name-row">
+          <h3 className="reco-name" title={r.name}>{r.name}</h3>
+          {r.totalReviews > 0 ? (
+            <span className="reco-rating">★ {averageRating.toFixed(1)}</span>
+          ) : (
+            <span className="reco-rating muted">New</span>
+          )}
+        </div>
+
+        <div className="reco-meta">
+          <span className="reco-cuisine">{titleCase(r.cuisineType)}</span>
+          {shortAddress && <span className="reco-dot">·</span>}
+          {shortAddress && <span className="reco-address" title={r.address}>{shortAddress}</span>}
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -163,7 +392,8 @@ function RestaurantCard({ r, onClick }) {
   const dt = deliveryMinutes(r.restaurantId)
   const minOrd = minOrder(r.restaurantId)
   const p2 = priceForTwo(r.restaurantId)
-  const showTopRated = r.totalReviews >= 5 && r.averageRating >= 4
+  const averageRating = Number(r.averageRating || 0)
+  const showTopRated = r.totalReviews >= 5 && averageRating >= 4
 
   return (
     <div className="r-card" onClick={onClick}>
@@ -176,12 +406,6 @@ function RestaurantCard({ r, onClick }) {
         }>
           <span>{cuisineEmoji(r.cuisineType)}</span>
           {showTopRated && <span className="r-promo">⭐ TOP RATED</span>}
-          {/*{r.isOpen && (*/}
-          {/*  <div className="r-time-overlay">*/}
-          {/*    <span>{dt} min</span>*/}
-          {/*    <span style={{ fontSize: 12, opacity: 0.92 }}>Min ₹{minOrd}</span>*/}
-          {/*  </div>*/}
-          {/*)}*/}
         </div>
       </div>
 
@@ -189,19 +413,18 @@ function RestaurantCard({ r, onClick }) {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
           <h3 className="r-name">{r.name}</h3>
           {r.totalReviews > 0 ? (
-            <span className="rating-pill">★ {r.averageRating.toFixed(1)}</span>
+            <span className="rating-pill">★ {averageRating.toFixed(1)}</span>
           ) : (
             <span className="rating-pill muted">New</span>
           )}
         </div>
         <div className="r-meta-row">
           <span style={{ color: 'var(--text)', fontSize: 13 }}>{titleCase(r.cuisineType)}</span>
-          <span className="dot-sep">·</span>
-          <span>{r.address?.split(' ').slice(-2).join(' ')}</span>
+          {r.address && <span className="dot-sep">·</span>}
+          {r.address && <span>{r.address.split(' ').slice(-2).join(' ')}</span>}
         </div>
         <div className="r-meta-row" style={{ marginTop: 2 }}>
-          <span>📍 {r.pinCode}</span>
-          <span className="dot-sep">·</span>
+          {r.pinCode && <span>📍 {r.pinCode}</span>}
         </div>
         {r.isVegOnly && (
           <div style={{ marginTop: 8 }}>

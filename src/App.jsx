@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import LoginPage from './pages/LoginPage.jsx'
+import SignupPage from './pages/SignupPage.jsx'
 import RestaurantsPage from './pages/RestaurantsPage.jsx'
 import RestaurantDetailPage from './pages/RestaurantDetailPage.jsx'
 import CartPage from './pages/CartPage.jsx'
@@ -35,6 +36,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
 
       {/* Owner home: lists every restaurant the signed-in owner manages.
           Picking one navigates to /owner/:restaurantId. */}

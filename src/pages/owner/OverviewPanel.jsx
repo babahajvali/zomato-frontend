@@ -3,7 +3,6 @@ import { useOutletContext, useParams } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import {
   GET_RESTAURANT_DASHBOARD,
-  VIEW_RESTAURANT_MENU,
 } from '../../graphql/operations.js'
 import { inr } from '../../lib/format.js'
 
@@ -13,14 +12,10 @@ const monthAgoStr = new Date(NOW.getTime() - 30 * 24 * 60 * 60 * 1000).toISOStri
 
 export default function OverviewPanel() {
   const { restaurantId } = useParams()
-  useOutletContext()
+  const { menuData } = useOutletContext()
 
   const { data: dash, loading } = useQuery(GET_RESTAURANT_DASHBOARD, {
     variables: { params: { restaurantId, dateFrom: monthAgoStr, dateTo: todayStr } },
-    fetchPolicy: 'cache-and-network',
-  })
-  const { data: menuData } = useQuery(VIEW_RESTAURANT_MENU, {
-    variables: { params: { restaurantId } },
     fetchPolicy: 'cache-and-network',
   })
 

@@ -75,8 +75,12 @@ export default function CheckoutPage() {
   const { data: promoData } = useQuery(GET_AVAILABLE_PROMO_CODES, {
     fetchPolicy: 'cache-and-network',
   })
+  const menuVariables = useMemo(
+    () => ({ params: { restaurantId } }),
+    [restaurantId]
+  )
   const { data: menuData } = useQuery(VIEW_RESTAURANT_MENU, {
-    variables: { params: { restaurantId } },
+    variables: menuVariables,
     skip: !restaurantId,
     fetchPolicy: 'cache-first',
   })
@@ -129,8 +133,8 @@ export default function CheckoutPage() {
     return { ok: true, target }
   }, [isScheduled, scheduledFor, restaurantTimings])
 
-  const addresses = addrData?.getUserAddress?.__typename === 'UserAddressesType'
-    ? addrData.getUserAddress.addresses
+  const addresses = addrData?.getUserAddresses?.__typename === 'UserAddressesType'
+    ? addrData.getUserAddresses.addresses
     : []
   const cartItems = cartData?.getCartItems?.__typename === 'CartItemsType'
     ? cartData.getCartItems.cartItems

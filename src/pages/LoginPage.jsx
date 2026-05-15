@@ -66,7 +66,7 @@ export default function LoginPage() {
           context: { headers: { authorization: `Bearer ${sess.token}` } },
         })
         
-        const tn = result?.data?.getUserAddress?.__typename
+        const tn = result?.data?.getUserAddresses?.__typename
         if (tn === 'UserNotFound') {
           setError('Login successful, but user not found in DB.')
           setBusy(false)
@@ -135,6 +135,25 @@ export default function LoginPage() {
             {busy || loginLoading ? 'Signing in…' : 'Sign In'}
           </button>
         </form>
+
+        <p className="login-sub" style={{ marginTop: 18, textAlign: 'center' }}>
+          New to Zomato?{' '}
+          <button
+            type="button"
+            onClick={() => navigate('/signup')}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#F97316',
+              fontWeight: 600,
+              cursor: 'pointer',
+              fontSize: 'inherit',
+              padding: 0,
+            }}
+          >
+            Create an account
+          </button>
+        </p>
 
       </div>
     </div>

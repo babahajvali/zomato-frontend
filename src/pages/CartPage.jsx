@@ -59,6 +59,7 @@ export default function CartPage() {
           const m = await client.query({
             query: VIEW_RESTAURANT_MENU,
             variables: { params: { restaurantId: r.restaurantId } },
+            fetchPolicy: 'cache-first',
           })
           const menu = m.data?.viewRestaurantManu
           if (menu?.__typename !== 'RestaurantMenuType') continue

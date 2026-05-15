@@ -74,6 +74,9 @@ export default function Layout({ children }) {
                 <NavLink to="/addresses" className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}>
                   Addresses
                 </NavLink>
+                <NavLink to="/profile" className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}>
+                  Profile
+                </NavLink>
                 <div className="nav-cart" onClick={() => navigate('/cart')}>
                   <span style={{ fontSize: 16 }}>🛒</span>
                   Cart

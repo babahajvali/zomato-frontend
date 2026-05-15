@@ -1,8 +1,7 @@
 import { useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { useQuery, useMutation } from '@apollo/client'
+import { useOutletContext, useParams } from 'react-router-dom'
+import { useMutation } from '@apollo/client'
 import {
-  VIEW_RESTAURANT_MENU,
   CREATE_MENU_ITEMS,
   UPDATE_MENU_ITEM,
   DELETE_MENU_ITEM,
@@ -35,15 +34,13 @@ export default function MenuPanel() {
   const [editForm, setEditForm] = useState(null)
   const [confirmDelete, setConfirmDelete] = useState(null)
 
-  const { data, refetch } = useQuery(VIEW_RESTAURANT_MENU, {
-    variables: { params: { restaurantId } },
-    fetchPolicy: 'cache-and-network',
-  })
+  const { menuData, refetchMenu } = useOutletContext()
+  const refetch = refetchMenu
   const [createMenuItems, { loading: creating }] = useMutation(CREATE_MENU_ITEMS)
   const [updateMenuItem, { loading: updatingItem }] = useMutation(UPDATE_MENU_ITEM)
   const [deleteMenuItem, { loading: deletingItem }] = useMutation(DELETE_MENU_ITEM)
 
-  const menu = data?.viewRestaurantManu
+  const menu = menuData?.viewRestaurantManu
   const allItems = useMemo(() => {
     if (menu?.__typename !== 'RestaurantMenuType') return []
     const out = []

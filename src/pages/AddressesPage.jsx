@@ -3,8 +3,8 @@ import { GET_USER_ADDRESSES } from '../graphql/operations.js'
 
 export default function AddressesPage() {
   const { data, loading, error } = useQuery(GET_USER_ADDRESSES)
-  const addresses = data?.getUserAddress?.__typename === 'UserAddressesType'
-    ? data.getUserAddress.addresses
+  const addresses = data?.getUserAddresses?.__typename === 'UserAddressesType'
+    ? data.getUserAddresses.addresses
     : []
 
   return (

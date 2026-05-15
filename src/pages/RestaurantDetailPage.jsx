@@ -5,6 +5,7 @@ import {
   VIEW_RESTAURANT_MENU,
   GET_RESTAURANT_TIMINGS,
   BROWSE_RESTAURANTS,
+  GET_SCORED_RESTAURANT_ITEMS,
   GET_CART_ITEMS,
   UPDATE_CART_ITEM,
   REMOVE_CART_ITEM,
@@ -20,14 +21,22 @@ export default function RestaurantDetailPage() {
   const { session } = useAuth()
   const cartId = session?.cartId
 
+  const menuVariables = useMemo(
+    () => ({ params: { restaurantId: id } }),
+    [id]
+  )
   const { data: menuData, loading: menuLoading } = useQuery(VIEW_RESTAURANT_MENU, {
-    variables: { params: { restaurantId: id } },
+    variables: menuVariables,
+    fetchPolicy: 'cache-first',
   })
   const { data: timingsData } = useQuery(GET_RESTAURANT_TIMINGS, {
     variables: { params: { restaurantId: id } },
   })
   const { data: brData } = useQuery(BROWSE_RESTAURANTS, {
     variables: { params: { search: null, limit: 100, offset: 0 } },
+  })
+  const { data: scoredItemsData, loading: scoredItemsLoading } = useQuery(GET_SCORED_RESTAURANT_ITEMS, {
+    variables: { params: { restaurantId: id } },
   })
 
   const { data: cartData, refetch: refetchCart } = useQuery(GET_CART_ITEMS, {
@@ -50,6 +59,10 @@ export default function RestaurantDetailPage() {
 
   const timings = timingsData?.getRestaurantTimings
   const timingList = timings?.__typename === 'RestaurantTimingsListType' ? timings.timings : []
+  const scoredItemsResult = scoredItemsData?.getScoredRestaurantItems
+  const scoredItems = scoredItemsResult?.__typename === 'ScoredItemsType'
+    ? scoredItemsResult.menuItems.slice(0, 3)
+    : []
 
   const cartItems = cartData?.getCartItems?.__typename === 'CartItemsType'
     ? cartData.getCartItems.cartItems
@@ -59,6 +72,13 @@ export default function RestaurantDetailPage() {
     for (const c of cartItems) map[c.menuItemId] = c
     return map
   }, [cartItems])
+
+  const menuItemById = useMemo(() => {
+    const map = {}
+    for (const c of categories)
+      for (const it of c.items) map[it.itemId] = { ...it, category: c.category }
+    return map
+  }, [categories])
 
   const allMenuItemIds = useMemo(() => {
     const set = new Set()
@@ -114,6 +134,7 @@ export default function RestaurantDetailPage() {
   }
 
   const cuisineKey = restaurant?.cuisineType?.toLowerCase()
+  const averageRating = Number(restaurant?.averageRating || 0)
 
   return (
     <>
@@ -145,7 +166,7 @@ export default function RestaurantDetailPage() {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
               {restaurant?.totalReviews > 0 ? (
-                <span className="rating-pill" style={{ fontSize: 14, padding: '5px 12px' }}>★ {restaurant.averageRating.toFixed(1)}</span>
+                <span className="rating-pill" style={{ fontSize: 14, padding: '5px 12px' }}>★ {averageRating.toFixed(1)}</span>
               ) : (
                 <span className="rating-pill muted" style={{ fontSize: 14, padding: '5px 12px' }}>New</span>
               )}
@@ -190,6 +211,87 @@ export default function RestaurantDetailPage() {
         </div>
       )}
 
+      {(scoredItemsLoading || scoredItems.length > 0) && (
+        <section className="recommended-section">
+          <div className="recommended-header">
+            <h2 className="recommended-title">Recommended items</h2>
+          </div>
+          {scoredItemsLoading ? (
+            <div className="recommended-grid">
+              {[0, 1, 2].map((i) => (
+                <div className="recommended-card" key={i}>
+                  <div className="recommended-image skeleton" />
+                  <div className="recommended-body">
+                    <div className="skeleton" style={{ height: 14, marginBottom: 8 }} />
+                    <div className="skeleton" style={{ height: 12, width: '40%', marginBottom: 14 }} />
+                    <div className="skeleton" style={{ height: 36 }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="recommended-grid">
+              {scoredItems.map((item) => {
+                const fullItem = menuItemById[item.menuItemId]
+                const inCart = cartItemByMenuId[item.menuItemId]
+                const qty = inCart?.quantity || 0
+                const isVeg = fullItem?.isVeg ?? false
+                const isAvailable = fullItem?.isAvailable ?? item.isAvailable
+
+                return (
+                  <div
+                    className="recommended-card"
+                    key={item.menuItemId}
+                    onClick={() => document.getElementById(`item-${item.menuItemId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+                  >
+                    <div className={'recommended-image ' + (isVeg ? 'veg' : 'non-veg')}>
+                      <span aria-hidden>{pickItemEmoji(fullItem?.category)}</span>
+                    </div>
+                    <div className="recommended-body">
+                      <div className="recommended-name" title={item.name}>{item.name}</div>
+                      <div className="recommended-price">{inr(item.price)}</div>
+                      {!isAvailable ? (
+                        <button
+                          className="recommended-add is-unavailable"
+                          disabled
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Unavailable
+                        </button>
+                      ) : qty === 0 ? (
+                        <button
+                          className="recommended-add"
+                          disabled={updating || cartHasOtherRestaurant}
+                          onClick={(e) => { e.stopPropagation(); setQty({ itemId: item.menuItemId }, 1) }}
+                        >
+                          ADD
+                        </button>
+                      ) : (
+                        <div className="recommended-qty" onClick={(e) => e.stopPropagation()}>
+                          <button
+                            className="recommended-qty-btn"
+                            onClick={() => setQty({ itemId: item.menuItemId }, qty - 1)}
+                            disabled={updating}
+                            aria-label="Decrease quantity"
+                          >−</button>
+                          <span className="recommended-qty-num">{qty}</span>
+                          <button
+                            className="recommended-qty-btn"
+                            onClick={() => setQty({ itemId: item.menuItemId }, qty + 1)}
+                            disabled={updating}
+                            aria-label="Increase quantity"
+                          >+</button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </section>
+      )}
+
       {/* Category jump tabs */}
       {categories.length > 0 && (
         <div className="cuisine-strip" style={{ marginBottom: 14 }}>
@@ -223,7 +325,7 @@ export default function RestaurantDetailPage() {
                 const inCart = cartItemByMenuId[it.itemId]
                 const qty = inCart?.quantity || 0
                 return (
-                  <div className="menu-row" key={it.itemId}>
+	                  <div className="menu-row" key={it.itemId} id={`item-${it.itemId}`}>
                     <div className="menu-info">
                       <div className="menu-name">
                         <span className={'veg-mark' + (it.isVeg ? '' : ' non-veg')} aria-hidden />
@@ -278,47 +380,41 @@ export default function RestaurantDetailPage() {
           ))}
         </div>
 
-        <aside className="card card-pad" style={{ position: 'sticky', top: 86 }}>
-          <h3 style={{ marginTop: 0, marginBottom: 12, fontSize: 17, color: 'var(--text-strong)' }}>
-            🛒 Your order
-          </h3>
-          {cartItems.length === 0 && (
-            <div style={{ color: 'var(--muted)', fontSize: 14, padding: '20px 0', textAlign: 'center' }}>
-              <div style={{ fontSize: 32, marginBottom: 8 }}>🍽️</div>
-              Your cart is empty.<br />
-              Add items to start your order.
+        {cartCountForThisR > 0 && (
+          <aside
+            className="card card-pad cart-aside"
+            style={{ position: 'sticky', top: 86 }}
+          >
+            <h3 style={{ marginTop: 0, marginBottom: 12, fontSize: 17, color: 'var(--text-strong)' }}>
+              🛒 Your order
+            </h3>
+            {cartItems
+              .filter((c) => allMenuItemIds.has(c.menuItemId))
+              .map((c) => {
+                const item = findMenuItem(categories, c.menuItemId)
+                return (
+                  <div className="summary-row" key={c.cartItemId}>
+                    <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {item?.name || c.menuItemId.slice(0, 6)}
+                      <span style={{ color: 'var(--muted)' }}> × {c.quantity}</span>
+                    </span>
+                    <span>{inr(Number(c.itemPrice) * c.quantity)}</span>
+                  </div>
+                )
+              })}
+            <div className="summary-row total">
+              <span>Subtotal</span>
+              <span>{inr(cartTotalForThisR)}</span>
             </div>
-          )}
-          {cartItems.length > 0 && (
-            <>
-              {cartItems
-                .filter((c) => allMenuItemIds.has(c.menuItemId))
-                .map((c) => {
-                  const item = findMenuItem(categories, c.menuItemId)
-                  return (
-                    <div className="summary-row" key={c.cartItemId}>
-                      <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {item?.name || c.menuItemId.slice(0, 6)}
-                        <span style={{ color: 'var(--muted)' }}> × {c.quantity}</span>
-                      </span>
-                      <span>{inr(Number(c.itemPrice) * c.quantity)}</span>
-                    </div>
-                  )
-                })}
-              <div className="summary-row total">
-                <span>Subtotal</span>
-                <span>{inr(cartTotalForThisR)}</span>
-              </div>
-              <button
-                className="btn block"
-                style={{ marginTop: 12 }}
-                onClick={() => navigate('/cart')}
-              >
-                Go to cart →
-              </button>
-            </>
-          )}
-        </aside>
+            <button
+              className="btn block"
+              style={{ marginTop: 12 }}
+              onClick={() => navigate('/cart')}
+            >
+              Go to cart →
+            </button>
+          </aside>
+        )}
       </div>
 
     </>

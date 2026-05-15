@@ -3,140 +3,42 @@
 > vite --host 0.0.0.0 --port 5173
 
 
-  VITE v5.4.21  ready in 184 ms
+  VITE v5.4.21  ready in 171 ms
 
   ➜  Local:   http://localhost:5173/
   ➜  Network: http://172.22.40.19:5173/
-2:06:39 pm [vite] Pre-transform error: /home/hr/FSD/zomato/frontend/src/pages/owner/OwnerShell.jsx: Expected corresponding JSX closing tag for <div>. (141:6)
-
-  139 |         </div>
-  140 |       </aside>
-> 141 |       </aside>
-      |       ^
-  142 |       
-  143 |       
-  144 |       <main className="owner-main">
-2:06:40 pm [vite] Internal server error: /home/hr/FSD/zomato/frontend/src/pages/owner/OwnerShell.jsx: Expected corresponding JSX closing tag for <div>. (141:6)
-
-  139 |         </div>
-  140 |       </aside>
-> 141 |       </aside>
-      |       ^
-  142 |       
-  143 |       
-  144 |       <main className="owner-main">
-  Plugin: vite:react-babel
-  File: /home/hr/FSD/zomato/frontend/src/pages/owner/OwnerShell.jsx:141:6
-  139|          </div>
-  140|        </aside>
-  141|        </aside>
-     |        ^
-  142|        
-  143|        
-      at constructor (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:365:19)
-      at JSXParserMixin.raise (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:6599:19)
-      at JSXParserMixin.jsxParseElementAt (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:4727:16)
-      at JSXParserMixin.jsxParseElement (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:4749:17)
-      at JSXParserMixin.parseExprAtom (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:4759:19)
-      at JSXParserMixin.parseExprSubscripts (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:11081:23)
-      at JSXParserMixin.parseUpdate (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:11066:21)
-      at JSXParserMixin.parseMaybeUnary (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:11046:23)
-      at JSXParserMixin.parseMaybeUnaryOrPrivate (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:10899:61)
-      at JSXParserMixin.parseExprOps (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:10904:23)
-      at JSXParserMixin.parseMaybeConditional (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:10881:23)
-      at JSXParserMixin.parseMaybeAssign (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:10831:21)
-      at /home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:10800:39
-      at JSXParserMixin.allowInAnd (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:12426:12)
-      at JSXParserMixin.parseMaybeAssignAllowIn (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:10800:17)
-      at JSXParserMixin.parseMaybeAssignAllowInOrVoidPattern (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:12493:17)
-      at JSXParserMixin.parseParenAndDistinguishExpression (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:11675:28)
-      at JSXParserMixin.parseExprAtom (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:11331:23)
-      at JSXParserMixin.parseExprAtom (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:4764:20)
-      at JSXParserMixin.parseExprSubscripts (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:11081:23)
-      at JSXParserMixin.parseUpdate (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:11066:21)
-      at JSXParserMixin.parseMaybeUnary (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:11046:23)
-      at JSXParserMixin.parseMaybeUnaryOrPrivate (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:10899:61)
-      at JSXParserMixin.parseExprOps (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:10904:23)
-      at JSXParserMixin.parseMaybeConditional (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:10881:23)
-      at JSXParserMixin.parseMaybeAssign (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:10831:21)
-      at JSXParserMixin.parseExpressionBase (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:10784:23)
-      at /home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:10780:39
-      at JSXParserMixin.allowInAnd (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:12421:16)
-      at JSXParserMixin.parseExpression (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:10780:17)
-      at JSXParserMixin.parseReturnStatement (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:13142:28)
-      at JSXParserMixin.parseStatementContent (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:12798:21)
-      at JSXParserMixin.parseStatementLike (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:12767:17)
-      at JSXParserMixin.parseStatementListItem (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:12747:17)
-      at JSXParserMixin.parseBlockOrModuleBlockBody (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:13316:61)
-      at JSXParserMixin.parseBlockBody (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:13309:10)
-      at JSXParserMixin.parseBlock (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:13297:10)
-      at JSXParserMixin.parseFunctionBody (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:12100:24)
-      at JSXParserMixin.parseFunctionBodyAndFinish (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:12086:10)
-      at /home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:13445:12
-      at JSXParserMixin.withSmartMixTopicForbiddingContext (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:12403:14)
-      at JSXParserMixin.parseFunction (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:13444:10)
-      at JSXParserMixin.parseExportDefaultExpression (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:13907:19)
-      at JSXParserMixin.parseExport (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:13828:25)
-      at JSXParserMixin.parseStatementContent (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:12878:27)
-      at JSXParserMixin.parseStatementLike (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:12767:17)
-      at JSXParserMixin.parseModuleItem (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:12744:17)
-      at JSXParserMixin.parseBlockOrModuleBlockBody (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:13316:36)
-      at JSXParserMixin.parseBlockBody (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:13309:10)
-      at JSXParserMixin.parseProgram (/home/hr/FSD/zomato/frontend/node_modules/@babel/parser/lib/index.js:12622:10)
-2:17:13 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
-2:20:20 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
-2:20:33 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
-2:20:42 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
-2:20:42 pm [vite] warning: The character "}" is not valid inside a JSX element
-201|            }
-202|            </NavLink>
-203|          ))}
-   |            ^
-204|  
-205|          <div className="os-foot">
-
-  Plugin: vite:esbuild
-  File: /home/hr/FSD/zomato/frontend/src/pages/owner/OwnerShell.jsx
-2:20:55 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
-2:24:10 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
-2:24:20 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
-2:24:46 pm [vite] hmr update /src/styles/index.css
-2:26:39 pm [vite] hmr update /src/styles/index.css
-2:27:21 pm [vite] hmr update /src/styles/index.css
-2:27:34 pm [vite] hmr update /src/styles/index.css
-2:29:10 pm [vite] hmr update /src/styles/index.css
-2:29:55 pm [vite] hmr update /src/styles/index.css
-2:29:58 pm [vite] hmr update /src/styles/index.css
-2:35:19 pm [vite] hmr update /src/styles/index.css
-2:36:33 pm [vite] hmr update /src/styles/index.css
-2:37:41 pm [vite] hmr update /src/styles/index.css
-2:45:05 pm [vite] hmr update /src/styles/index.css
-2:47:21 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
-2:48:10 pm [vite] hmr update /src/styles/index.css
-2:49:19 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
-2:51:10 pm [vite] hmr update /src/styles/index.css
-2:52:24 pm [vite] hmr update /src/styles/index.css
-2:54:41 pm [vite] hmr update /src/styles/index.css
-2:54:54 pm [vite] hmr update /src/styles/index.css
-2:54:59 pm [vite] hmr update /src/styles/index.css
-2:56:03 pm [vite] hmr update /src/styles/index.css
-2:57:03 pm [vite] hmr update /src/styles/index.css
-3:00:53 pm [vite] hmr update /src/styles/index.css
-3:01:08 pm [vite] hmr update /src/styles/index.css
-3:02:44 pm [vite] hmr update /src/styles/index.css
-3:02:50 pm [vite] hmr update /src/styles/index.css
-3:03:51 pm [vite] hmr update /src/styles/index.css
-3:04:50 pm [vite] hmr update /src/styles/index.css
-3:08:13 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
-3:08:29 pm [vite] hmr update /src/styles/index.css
-3:08:40 pm [vite] hmr update /src/styles/index.css
-3:10:10 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
-3:10:19 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
-3:13:49 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
-3:13:50 pm [vite] hmr update /src/styles/index.css
-3:15:49 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
-3:20:11 pm [vite] hmr update /src/pages/CartPage.jsx
-3:20:11 pm [vite] hmr update /src/styles/index.css
-3:20:21 pm [vite] hmr update /src/styles/index.css
-3:20:32 pm [vite] hmr update /src/styles/index.css
-3:21:55 pm [vite] hmr update /src/styles/index.css
+3:15:23 pm [vite] hmr update /src/pages/RestaurantDetailPage.jsx
+3:15:27 pm [vite] hmr update /src/pages/RestaurantDetailPage.jsx
+3:15:42 pm [vite] hmr update /src/pages/RestaurantDetailPage.jsx
+3:16:13 pm [vite] hmr update /src/styles/index.css
+3:39:38 pm [vite] hmr update /src/pages/LoginPage.jsx, /src/pages/SignupPage.jsx, /src/pages/RestaurantsPage.jsx, /src/pages/RestaurantDetailPage.jsx, /src/pages/CartPage.jsx, /src/pages/CheckoutPage.jsx, /src/pages/OrdersPage.jsx, /src/pages/OrderDetailPage.jsx, /src/pages/AddressesPage.jsx, /src/pages/ProfilePage.jsx, /src/pages/owner/OwnerShell.jsx, /src/pages/owner/OwnerRestaurantsPage.jsx, /src/pages/owner/OverviewPanel.jsx, /src/pages/owner/LiveOrdersPanel.jsx, /src/pages/owner/ScheduledOrdersPanel.jsx, /src/pages/owner/MenuPanel.jsx, /src/pages/owner/TimingsPanel.jsx, /src/components/Layout.jsx, /src/components/GlobalCartBar.jsx, /src/components/MobileBottomNav.jsx
+3:40:40 pm [vite] hmr update /src/pages/RestaurantsPage.jsx
+3:41:22 pm [vite] hmr update /src/styles/index.css
+4:04:53 pm [vite] hmr update /src/pages/LoginPage.jsx, /src/pages/SignupPage.jsx, /src/pages/RestaurantsPage.jsx, /src/pages/RestaurantDetailPage.jsx, /src/pages/CartPage.jsx, /src/pages/CheckoutPage.jsx, /src/pages/OrdersPage.jsx, /src/pages/OrderDetailPage.jsx, /src/pages/AddressesPage.jsx, /src/pages/ProfilePage.jsx, /src/pages/owner/OwnerShell.jsx, /src/pages/owner/OwnerRestaurantsPage.jsx, /src/pages/owner/OverviewPanel.jsx, /src/pages/owner/LiveOrdersPanel.jsx, /src/pages/owner/ScheduledOrdersPanel.jsx, /src/pages/owner/MenuPanel.jsx, /src/pages/owner/TimingsPanel.jsx, /src/components/Layout.jsx, /src/components/GlobalCartBar.jsx, /src/components/MobileBottomNav.jsx
+4:09:46 pm [vite] hmr update /src/pages/RestaurantDetailPage.jsx
+4:10:03 pm [vite] hmr update /src/styles/index.css
+4:23:01 pm [vite] hmr update /src/pages/RestaurantsPage.jsx
+4:23:31 pm [vite] hmr update /src/styles/index.css
+4:31:49 pm [vite] hmr update /src/pages/RestaurantsPage.jsx
+4:32:14 pm [vite] hmr update /src/pages/RestaurantsPage.jsx
+4:32:23 pm [vite] hmr update /src/pages/RestaurantsPage.jsx
+4:38:37 pm [vite] hmr update /src/pages/RestaurantsPage.jsx
+4:45:39 pm [vite] hmr update /src/pages/RestaurantDetailPage.jsx
+4:46:03 pm [vite] hmr update /src/pages/owner/MenuPanel.jsx
+4:46:05 pm [vite] hmr update /src/pages/owner/OverviewPanel.jsx
+4:46:08 pm [vite] hmr update /src/pages/CartPage.jsx
+4:46:09 pm [vite] hmr update /src/pages/OrderDetailPage.jsx
+4:54:22 pm [vite] page reload src/lib/apollo.js
+4:54:41 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
+4:54:48 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
+4:54:49 pm [vite] hmr update /src/pages/owner/OwnerShell.jsx
+4:55:09 pm [vite] hmr update /src/pages/owner/OverviewPanel.jsx
+4:55:23 pm [vite] hmr update /src/pages/owner/LiveOrdersPanel.jsx
+4:55:28 pm [vite] hmr update /src/pages/owner/LiveOrdersPanel.jsx
+4:55:40 pm [vite] hmr update /src/pages/owner/ScheduledOrdersPanel.jsx
+4:55:45 pm [vite] hmr update /src/pages/owner/ScheduledOrdersPanel.jsx
+4:55:59 pm [vite] hmr update /src/pages/owner/MenuPanel.jsx
+4:56:03 pm [vite] hmr update /src/pages/owner/MenuPanel.jsx
+4:56:18 pm [vite] hmr update /src/pages/RestaurantDetailPage.jsx
+4:56:35 pm [vite] hmr update /src/pages/CheckoutPage.jsx
+5:03:05 pm [vite] hmr update /src/pages/OrderDetailPage.jsx

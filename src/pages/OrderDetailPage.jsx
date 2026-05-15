@@ -52,8 +52,8 @@ export default function OrderDetailPage() {
   const { data: userReviewData, loading: userReviewLoading, refetch: refetchUserReview } = useQuery(
     GET_USER_RESTAURANT_REVIEW,
     {
-      variables: { params: { restaurantId: order?.restaurantId, userId: customerId } },
-      skip: !order?.restaurantId || !customerId,
+      variables: { params: { restaurantId: order?.restaurantId } },
+      skip: !order?.restaurantId,
       fetchPolicy: 'cache-and-network',
     },
   )
@@ -79,6 +79,7 @@ export default function OrderDetailPage() {
       const m = await client.query({
         query: VIEW_RESTAURANT_MENU,
         variables: { params: { restaurantId: order.restaurantId } },
+        fetchPolicy: 'cache-first',
       })
       if (cancelled) return
       const menu = m.data?.viewRestaurantManu

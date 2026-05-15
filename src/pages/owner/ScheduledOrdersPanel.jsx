@@ -1,10 +1,9 @@
 import { useState, useMemo } from 'react'
-import { useParams } from 'react-router-dom'
+import { useOutletContext, useParams } from 'react-router-dom'
 import { useQuery, useMutation } from '@apollo/client'
 import {
   TODAY_RESTAURANT_SCHEDULED_ORDERS,
   UPDATE_ORDER_STATUS,
-  VIEW_RESTAURANT_MENU,
 } from '../../graphql/operations.js'
 import { inr, fmtScheduled, titleCase } from '../../lib/format.js'
 
@@ -43,6 +42,7 @@ const STATUS_DOT_TEXT = {
 
 export default function ScheduledOrdersPanel() {
   const { restaurantId } = useParams()
+  const { menuData } = useOutletContext()
   const [filter, setFilter] = useState('ALL')
   const [error, setError] = useState('')
 
@@ -50,10 +50,6 @@ export default function ScheduledOrdersPanel() {
     variables: { params: { restaurantId, limit: 100, offset: 0 } },
     pollInterval: 60000,
     fetchPolicy: 'cache-and-network',
-  })
-  const { data: menuData } = useQuery(VIEW_RESTAURANT_MENU, {
-    variables: { params: { restaurantId } },
-    fetchPolicy: 'cache-first',
   })
   const [updateStatus, { loading: updating }] = useMutation(UPDATE_ORDER_STATUS)
 
@@ -111,17 +107,11 @@ export default function ScheduledOrdersPanel() {
         {counts.map((f) => (
           <div
             key={f.value}
-            className={'pill' + (filter === f.value ? ' active brand' : '')}
+            className={'pill owner-filter-pill' + (filter === f.value ? ' active brand' : '')}
             onClick={() => setFilter(f.value)}
           >
-            {f.label} <span style={{
-              background: filter === f.value ? 'rgba(255,255,255,0.25)' : '#f0f0f0',
-              padding: '1px 7px',
-              borderRadius: 999,
-              fontSize: 11,
-              fontWeight: 800,
-              marginLeft: 4,
-            }}>{f.n}</span>
+            <span className="owner-filter-label">{f.label}</span>
+            <span className="owner-filter-count">{f.n}</span>
           </div>
         ))}
       </div>

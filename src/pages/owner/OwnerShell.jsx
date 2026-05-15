@@ -6,6 +6,7 @@ import {
   GET_RESTAURANT_TIMINGS,
   TODAY_RESTAURANT_ORDERS,
   TODAY_RESTAURANT_SCHEDULED_ORDERS,
+  VIEW_RESTAURANT_MENU,
 } from '../../graphql/operations.js'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { titleCase } from '../../lib/format.js'
@@ -89,6 +90,18 @@ export default function OwnerShell() {
   const scheduledPending = schedData?.todayRestaurantScheduledOrders?.__typename === 'ScheduledOrderSummariesType'
     ? schedData.todayRestaurantScheduledOrders.orderSummaries.filter((o) => o.status === 'PLACED').length
     : 0
+
+  // ─── Menu, lifted from each panel to a single source of truth ───
+  // All owner panels (Overview, Live, Scheduled, Menu) consume this via
+  // useOutletContext(). Single fetch per restaurant, shared across tabs.
+  const menuVariables = useMemo(
+    () => ({ params: { restaurantId } }),
+    [restaurantId]
+  )
+  const { data: menuData, refetch: refetchMenu } = useQuery(VIEW_RESTAURANT_MENU, {
+    variables: menuVariables,
+    fetchPolicy: 'cache-first',
+  })
 
   const handleLogout = () => { logout(); navigate('/login') }
 
@@ -223,7 +236,7 @@ export default function OwnerShell() {
         </header>
 
         <div className="owner-content">
-          <Outlet context={{ restaurant, pending }} />
+          <Outlet context={{ restaurant, pending, menuData, refetchMenu }} />
         </div>
       </main>
     </div>
