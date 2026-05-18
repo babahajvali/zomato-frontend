@@ -161,7 +161,7 @@ export default function ProfilePage() {
 
   const displayName = session?.name || 'User'
   const email = session?.email || ''
-  const phone = session?.phone || ''
+  const phoneNumber = session?.phoneNumber || ''
   const initial = (displayName.trim()[0] || 'U').toUpperCase()
 
   const updateField = async (params) => {
@@ -178,7 +178,7 @@ export default function ProfilePage() {
         ...session,
         name: res.name,
         email: res.email,
-        phone: res.phoneNumber,
+        phoneNumber: res.phoneNumber,
       })
       toast.success('Profile updated successfully')
       return
@@ -258,7 +258,7 @@ export default function ProfilePage() {
           />
           <ProfileField
             label="Phone Number"
-            value={phone}
+            value={phoneNumber}
             onSave={handleSavePhone}
             validate={validatePhone}
             type="tel"

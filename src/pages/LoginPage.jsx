@@ -53,6 +53,8 @@ export default function LoginPage() {
           userId: response.userId,
           token: response.accessToken,
           name: response.name,
+          email: response.email,
+          phoneNumber: response.phoneNumber,
           role: response.role,
           cartId: null // Cart will be fetched dynamically when needed
         }

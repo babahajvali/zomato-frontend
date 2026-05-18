@@ -1,17 +1,7 @@
 Performing system checks...
 
 System check identified no issues (0 silenced).
-May 15, 2026 - 15:07:44
-Django version 5.2.7, using settings 'zomato.settings'
-Starting development server at http://0.0.0.0:8000/
-Quit the server with CONTROL-C.
-
-WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
-For more information on production servers see: https://docs.djangoproject.com/en/5.2/howto/deployment/
-Performing system checks...
-
-System check identified no issues (0 silenced).
-May 15, 2026 - 15:34:34
+May 15, 2026 - 17:51:16
 Django version 5.2.7, using settings 'zomato.settings'
 Starting development server at http://0.0.0.0:8000/
 Quit the server with CONTROL-C.

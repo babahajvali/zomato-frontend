@@ -117,14 +117,6 @@ export default function RestaurantsPage() {
     ? recoResult.restaurants
     : []
 
-  const topScoreThreshold = useMemo(() => {
-    if (recommendedRestaurants.length === 0) return Infinity
-    const scores = recommendedRestaurants
-      .map((r) => Number(r.score || 0))
-      .sort((a, b) => b - a)
-    return scores[Math.min(2, scores.length - 1)]
-  }, [recommendedRestaurants])
-
   const apply = (e) => { e?.preventDefault?.(); setApplied(draft) }
 
   const pickCuisine = (val) => {
@@ -268,11 +260,11 @@ export default function RestaurantsPage() {
           </div>
 
           {recoLoading ? (
-            <div className="reco-row">
+            <div className="grid">
               {[0, 1, 2, 3].map((i) => (
-                <div className="reco-card" key={i}>
-                  <div className="reco-banner skeleton" />
-                  <div className="reco-body">
+                <div className="r-card" key={i}>
+                  <div className="r-banner skeleton" />
+                  <div className="r-body">
                     <div className="skeleton" style={{ height: 16, marginBottom: 8 }} />
                     <div className="skeleton" style={{ height: 12, width: '60%', marginBottom: 10 }} />
                     <div className="skeleton" style={{ height: 22, width: '40%' }} />
@@ -291,12 +283,11 @@ export default function RestaurantsPage() {
               </div>
             </div>
           ) : (
-            <div className="reco-row">
+            <div className="grid">
               {recommendedRestaurants.map((r) => (
-                <RecommendedCard
+                <RestaurantCard
                   key={r.restaurantId}
-                  r={r}
-                  isTopPick={Number(r.score || 0) >= topScoreThreshold && Number(r.score || 0) > 0}
+                  r={{ ...r, pinCode: r.pinCode ?? r.pincode }}
                   onClick={() => navigate(`/restaurants/${r.restaurantId}`)}
                 />
               ))}
@@ -342,48 +333,6 @@ export default function RestaurantsPage() {
         </>
       )}
     </>
-  )
-}
-
-function RecommendedCard({ r, isTopPick, onClick }) {
-  const cuisineKey = r.cuisineType?.toLowerCase()
-  const averageRating = Number(r.averageRating || 0)
-  const shortAddress = r.address
-    ? r.address.split(',').slice(-2).join(',').trim()
-    : ''
-
-  return (
-    <div className="reco-card" onClick={onClick}>
-      <div className={'reco-banner ' + (r.isVegOnly ? 'veg ' : '') + cuisineKey}>
-        <span className="reco-banner-emoji" aria-hidden>{cuisineEmoji(r.cuisineType)}</span>
-
-        <div className="reco-badge-stack">
-          {isTopPick && <span className="reco-badge top-pick">🔥 Top Pick</span>}
-          {r.isVegOnly && <span className="reco-badge veg">PURE VEG</span>}
-        </div>
-
-        <span className={'reco-status ' + (r.isOpen ? 'open' : 'closed')}>
-          {r.isOpen ? 'Open' : 'Closed'}
-        </span>
-      </div>
-
-      <div className="reco-body">
-        <div className="reco-name-row">
-          <h3 className="reco-name" title={r.name}>{r.name}</h3>
-          {r.totalReviews > 0 ? (
-            <span className="reco-rating">★ {averageRating.toFixed(1)}</span>
-          ) : (
-            <span className="reco-rating muted">New</span>
-          )}
-        </div>
-
-        <div className="reco-meta">
-          <span className="reco-cuisine">{titleCase(r.cuisineType)}</span>
-          {shortAddress && <span className="reco-dot">·</span>}
-          {shortAddress && <span className="reco-address" title={r.address}>{shortAddress}</span>}
-        </div>
-      </div>
-    </div>
   )
 }
 

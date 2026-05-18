@@ -85,7 +85,7 @@ export default function SignupPage() {
           token: loginRes.accessToken,
           name: loginRes.name,
           email: loginRes.email,
-          phone: loginRes.phoneNumber,
+          phoneNumber: loginRes.phoneNumber,
           role: loginRes.role,
           cartId: null,
         })
