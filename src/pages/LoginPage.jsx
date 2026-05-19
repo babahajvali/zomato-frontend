@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useApolloClient, useMutation } from '@apollo/client'
 import { GET_USER_ADDRESSES, USER_LOGIN, GET_CUSTOMER_CART_ID } from '../graphql/operations.js'
@@ -9,6 +9,8 @@ export default function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const client = useApolloClient()
+  const [searchParams] = useSearchParams()
+  const sessionExpired = searchParams.get('session') === 'expired'
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -107,6 +109,12 @@ export default function LoginPage() {
         <p className="login-sub">
           Enter your email and password to login to your Zomato account.
         </p>
+
+        {sessionExpired && (
+          <div className="error-message">
+            Your session has expired. Please log in again.
+          </div>
+        )}
 
         {error && <div className="errbox">{error}</div>}
 

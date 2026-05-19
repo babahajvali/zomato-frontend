@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import LoginPage from './pages/LoginPage.jsx'
 import SignupPage from './pages/SignupPage.jsx'
 import RestaurantsPage from './pages/RestaurantsPage.jsx'
@@ -32,8 +33,34 @@ function CustomerShell({ children }) {
   )
 }
 
+function SessionExpiryGuard() {
+  const { session, logout } = useAuth()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!session?.token) return
+
+    try {
+      const payload = JSON.parse(atob(session.token.split('.')[1]))
+      const isExpired = payload.exp * 1000 < Date.now()
+
+      if (isExpired) {
+        logout()
+        navigate('/login?session=expired')
+      }
+    } catch {
+      logout()
+      navigate('/login?session=expired')
+    }
+  }, [session, logout, navigate])
+
+  return null
+}
+
 export default function App() {
   return (
+    <>
+    <SessionExpiryGuard />
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
@@ -80,5 +107,6 @@ export default function App() {
       <Route path="/profile" element={<CustomerShell><ProfilePage /></CustomerShell>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </>
   )
 }

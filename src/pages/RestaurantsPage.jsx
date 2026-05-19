@@ -68,6 +68,7 @@ export default function RestaurantsPage() {
   const hasFilters = Boolean(
     applied.cuisineType ||
     applied.isVegOnly ||
+    applied.pincode ||
     applied.minRating ||
     applied.search
   )

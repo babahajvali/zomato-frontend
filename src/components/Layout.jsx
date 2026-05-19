@@ -5,9 +5,10 @@ import { useAuth } from '../context/AuthContext.jsx'
 import { GET_CART_ITEMS } from '../graphql/operations.js'
 import GlobalCartBar from './GlobalCartBar.jsx'
 import MobileBottomNav from './MobileBottomNav.jsx'
+import ProfileMenu from './ProfileMenu.jsx'
 
 export default function Layout({ children }) {
-  const { session, logout } = useAuth()
+  const { session } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const isOwner = session?.role === 'OWNER'
@@ -30,11 +31,6 @@ export default function Layout({ children }) {
   const cartCount = cartData?.getCartItems?.__typename === 'CartItemsType'
     ? cartData.getCartItems.cartItems.reduce((s, c) => s + c.quantity, 0)
     : 0
-
-  const handleLogout = () => {
-    logout()
-    navigate('/login')
-  }
 
   const submitSearch = (e) => {
     e.preventDefault()
@@ -89,13 +85,7 @@ export default function Layout({ children }) {
                 Owner
               </NavLink>
             )}
-            {session && (
-              <span className="nav-user">
-                {session.name || session.userId?.slice(0, 8)}
-                {session.role && <span className={'role-pill ' + session.role}>{session.role}</span>}
-              </span>
-            )}
-            <button className="btn subtle sm" onClick={handleLogout}>Logout</button>
+            {session && <ProfileMenu />}
           </div>
         </div>
       </nav>
